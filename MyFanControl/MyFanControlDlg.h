@@ -53,6 +53,12 @@ public:
 	int m_nWindowSize[2];//完整窗口尺寸
 	BOOL m_bAdvancedMode;//高级模式
 
+	// Windows 11 视觉效果支持
+	BOOL m_bWin11StyleApplied; // 是否应用了Win11样式
+	void ApplyWin11Style(); // 应用Win11视觉效果
+	void UpdateModernUI(); // 更新现代化UI
+	void ApplyModernTheme(); // 应用现代化主题
+
 public:
 	static DWORD WINAPI CoreThread(LPVOID lParam);
 	afx_msg void OnWindowPosChanging(WINDOWPOS* lpwndpos);
