@@ -7,6 +7,32 @@
 #include "MyFanControlDlg.h"
 #include "afxdialogex.h"
 
+// Windows 11 视觉效果相关
+#include <dwmapi.h>
+#pragma comment(lib, "dwmapi.lib")
+
+// 定义Windows 11 DWM属性
+#ifndef DWMWA_USE_IMMERSIVE_DARK_MODE
+#define DWMWA_USE_IMMERSIVE_DARK_MODE 20
+#endif
+
+#ifndef DWMWA_MICA_EFFECT
+#define DWMWA_MICA_EFFECT 1029
+#endif
+
+#ifndef DWMWA_SYSTEMBACKDROP_TYPE
+#define DWMWA_SYSTEMBACKDROP_TYPE 1029
+#endif
+
+// Windows 11 背景类型
+enum DWM_SYSTEMBACKDROP_TYPE {
+    DWMSBT_AUTO = 0,
+    DWMSBT_NONE = 1,
+    DWMSBT_MAINWINDOW = 2,
+    DWMSBT_TRANSIENTWINDOW = 3,
+    DWMSBT_TABBEDWINDOW = 4
+};
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -106,6 +132,7 @@ CMyFanControlDlg::CMyFanControlDlg(CWnd* pParent /*=NULL*/)
 	m_bAdvancedMode = TRUE;
 	m_nWindowSize[0] = 0;
 	m_nWindowSize[1] = 0;
+	m_bWin11StyleApplied = FALSE; // 初始化Win11样式标志
 
 	m_nDutyEditCtlID[0][0] = IDC_EDIT_CPU0;
 	m_nDutyEditCtlID[0][1] = IDC_EDIT_CPU1;
@@ -1037,4 +1064,43 @@ BOOL CMyFanControlDlg::CheckInputFrequency(int nFrequency)
 
 
 	return TRUE;
+}
+
+void CMyFanControlDlg::ApplyWin11Style()
+{
+    // 检查是否为Windows 11系统
+    BOOL enableDarkMode = TRUE;
+    DwmSetWindowAttribute(m_hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, 
+                         &enableDarkMode, sizeof(enableDarkMode));
+
+    // 尝试设置Mica效果（Windows 11 22523+）
+    DWM_SYSTEMBACKDROP_TYPE backdropType = DWMSBT_MAINWINDOW;
+    DwmSetWindowAttribute(m_hWnd, DWMWA_SYSTEMBACKDROP_TYPE,
+                         &backdropType, sizeof(backdropType));
+
+    // 设置窗口边框颜色为透明以支持现代化效果
+    MARGINS margins = { -1 };
+    DwmExtendFrameIntoClientArea(m_hWnd, &margins);
+
+    m_bWin11StyleApplied = TRUE;
+}
+
+void CMyFanControlDlg::UpdateModernUI()
+{
+    // 更新UI元素以匹配现代化风格
+    if (m_bWin11StyleApplied)
+    {
+        // 可以在这里添加现代化UI元素的更新逻辑
+        // 如调整控件间距、字体等
+    }
+}
+
+void CMyFanControlDlg::ApplyModernTheme()
+{
+    // 应用现代化主题
+    if (m_bWin11StyleApplied)
+    {
+        // 设置现代化颜色方案
+        SetBackgroundColor(RGB(32, 32, 32)); // 深色背景
+    }
 }

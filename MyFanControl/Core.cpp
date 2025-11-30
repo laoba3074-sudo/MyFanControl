@@ -18,7 +18,7 @@ int GetTime(tm *pt, int offset)
 }
 int GetTimeInterval(int a, int b, int *p)
 {
-	//Ê±¼ä²î£¬ÊäÈëÁ½¸ö6Î»ÊıÊ±¼ä£¬Èç¿ªÅÌÊ±¼ä91500£¬µÃµ½a-b£¬²¢×ª»¯Îª6Î»ÊıÊ±¼ä£¬Ö¸Õëp½ÓÊÜÒÔÃë¼ÆµÄÊ±¼ä²î
+	//æ—¶é—´å·®ï¼Œè¾“å…¥ä¸¤ä¸ª6ä½æ•°æ—¶é—´ï¼Œå¦‚å¼€ç›˜æ—¶é—´91500ï¼Œå¾—åˆ°a-bï¼Œå¹¶è½¬åŒ–ä¸º6ä½æ•°æ—¶é—´ï¼ŒæŒ‡é’ˆpæ¥å—ä»¥ç§’è®¡çš„æ—¶é—´å·®
 	int a1 = a / 10000;
 	int a2 = (a % 10000) / 100;
 	int a3 = a % 100;
@@ -55,13 +55,13 @@ CString GetExePath(){
 
 CGPUInfo::CGPUInfo()
 {
-	TRACE0("¿ªÊ¼¼ÓÔØNVGPU_DLL.dll¡£\n");
+	TRACE0("å¼€å§‹åŠ è½½NVGPU_DLL.dllã€‚\n");
 	m_hGPUdll = NULL;
 	CString dllpth = GetExePath() + "\\NVGPU_DLL.dll";
 	m_hGPUdll = LoadLibrary(dllpth);
 	if (m_hGPUdll == NULL)
 	{
-		TRACE0("ÎŞ·¨¼ÓÔØ" + dllpth+"\n");
+		TRACE0("æ— æ³•åŠ è½½" + dllpth+"\n");
 		return;
 	}
 
@@ -92,7 +92,7 @@ CGPUInfo::CGPUInfo()
 	//
 	if (m_pfnInitGPU_API())
 	{
-		TRACE0("InitGPU_API³õÊ¼»¯Ê§°Ü¡£\n");
+		TRACE0("InitGPU_APIåˆå§‹åŒ–å¤±è´¥ã€‚\n");
 		FreeLibrary(m_hGPUdll);
 		m_hGPUdll = NULL;
 		return;
@@ -113,13 +113,13 @@ CGPUInfo::CGPUInfo()
 
 	Update();
 
-	TRACE0("³É¹¦¼ÓÔØNVGPU_DLL.dll¡£\n");
+	TRACE0("æˆåŠŸåŠ è½½NVGPU_DLL.dllã€‚\n");
 }
 CGPUInfo::~CGPUInfo()
 {
 	if (m_hGPUdll != NULL)
 	{
-		LockFrequency();//»¹Ô­GPUÆµÂÊÉèÖÃ
+		LockFrequency();//è¿˜åŸGPUé¢‘ç‡è®¾ç½®
 		m_pfnCloseGPU_API();
 		FreeLibrary(m_hGPUdll);
 		m_hGPUdll = NULL;
@@ -154,33 +154,33 @@ BOOL CGPUInfo::LockFrequency(int frequency)
 	//int MemClock = 0;
 	if (frequency > 0 && frequency < m_nStandardFrequency)
 	{
-		//½µÆµ
+		//é™é¢‘
 		GpuClock = frequency;
 	}
 	else if (frequency > m_nStandardFrequency)
 	{
-		//³¬Æµ
+		//è¶…é¢‘
 		GpuOverclock = frequency - m_nStandardFrequency;
-		MemOverclock = GpuOverclock * m_nMemoryRangeMax / m_nGraphicsRangeMax;//°´ÕÕ±ÈÀı½øĞĞÏÔ´æ³¬Æµ
+		MemOverclock = GpuOverclock * m_nMemoryRangeMax / m_nGraphicsRangeMax;//æŒ‰ç…§æ¯”ä¾‹è¿›è¡Œæ˜¾å­˜è¶…é¢‘
 	}
 
 	//
 	int rv1 = (m_pfnSet_CoreOC(0, GpuOverclock) == 0);
 	if (!rv1)
-		AfxMessageBox("Set_CoreOCÊ§°Ü");
+		AfxMessageBox("Set_CoreOCå¤±è´¥");
 	//
 	int rv2 = (m_pfnSet_MEMOC(0, MemOverclock) == 0);
 	if (!rv2)
-		AfxMessageBox("Set_MEMOCÊ§°Ü");
+		AfxMessageBox("Set_MEMOCå¤±è´¥");
 	//
 	int rv3 = (m_pfnLock_Frequency(0, GpuClock) == 0x19);
 	if (!rv3)
-		AfxMessageBox("Lock_FrequencyÊ§°Ü");
+		AfxMessageBox("Lock_Frequencyå¤±è´¥");
 	//
 	int rv4 = 1;
 	//int rv4 = (m_pfnLock_Frequency_MEM(0, MemClock) == 0x19);
 	if (!rv4)
-		AfxMessageBox("Lock_Frequency_MEMÊ§°Ü");
+		AfxMessageBox("Lock_Frequency_MEMå¤±è´¥");
 	//
 	return (rv1 && rv2 && rv3 && rv4);
 }
@@ -222,7 +222,7 @@ void CConfig::LoadConfig()
 		SaveConfig();
 		if (!file.Open(strPath, CFile::modeRead | CFile::shareDenyNone))
 		{
-			AfxMessageBox("ÎŞ·¨ÔØÈëÅäÖÃÎÄ¼ş");
+			AfxMessageBox("æ— æ³•è½½å…¥é…ç½®æ–‡ä»¶");
 			return;
 		}
 	}
@@ -232,12 +232,12 @@ void CConfig::LoadConfig()
 		SaveConfig();
 		if (!file.Open(strPath, CFile::modeRead | CFile::shareDenyNone))
 		{
-			AfxMessageBox("ÖØÖÃºóÈÔÈ»ÎŞ·¨ÔØÈëÅäÖÃÎÄ¼ş");
+			AfxMessageBox("é‡ç½®åä»ç„¶æ— æ³•è½½å…¥é…ç½®æ–‡ä»¶");
 			return;
 		}
 		if (file.GetLength() != sizeof(*this))
 		{
-			AfxMessageBox("ÅäÖÃÎÄ¼ş¸ñÊ½²»ÕıÈ·");
+			AfxMessageBox("é…ç½®æ–‡ä»¶æ ¼å¼ä¸æ­£ç¡®");
 			file.Close();
 			return;
 		}
@@ -252,7 +252,7 @@ void CConfig::SaveConfig()
 	fp = fopen(strPath, "wb");
 	if (fp == NULL)
 	{
-		AfxMessageBox("ÎŞ·¨±£´æÅäÖÃÎÄ¼ş");
+		AfxMessageBox("æ— æ³•ä¿å­˜é…ç½®æ–‡ä»¶");
 		return;
 	}
 	fwrite(this, sizeof(*this), 1, fp);
@@ -277,14 +277,14 @@ CCore::CCore()
 	m_hInstDLL = NULL;
 	for (int i = 0; i < 2; i++)
 	{
-		m_nCurTemp[i]=0;//µ±Ç°ÎÂ¶È
-		m_nLastTemp[i]=0;//ÉÏÒ»´ÎÎÂ¶È
-		m_nSetDuty[i]=0;//ÉèÖÃµÄ¸ºÔØ
-		m_nSetDutyLevel[i] = 0;//ÉèÖÃµÄ×ªËÙµ²Î»£¬×îµÍËÙµµÎª1£¬×î¸ßËÙµµÎª10
-		m_nCurDuty[i]=0;//µ±Ç°¸ºÔØ
-		m_nCurRPM[i]=0;//µ±Ç°×ªËÙ
+		m_nCurTemp[i]=0;//å½“å‰æ¸©åº¦
+		m_nLastTemp[i]=0;//ä¸Šä¸€æ¬¡æ¸©åº¦
+		m_nSetDuty[i]=0;//è®¾ç½®çš„è´Ÿè½½
+		m_nSetDutyLevel[i] = 0;//è®¾ç½®çš„è½¬é€ŸæŒ¡ä½ï¼Œæœ€ä½é€Ÿæ¡£ä¸º1ï¼Œæœ€é«˜é€Ÿæ¡£ä¸º10
+		m_nCurDuty[i]=0;//å½“å‰è´Ÿè½½
+		m_nCurRPM[i]=0;//å½“å‰è½¬é€Ÿ
 	}
-	m_bUpdateRPM=0;//ÊÇ·ñ¸üĞÂ×ªËÙ£¬Èç¹ûÎª0£¬Ö»¸üĞÂ·çÉÈÎÂ¶ÈºÍ¸ºÔØ
+	m_bUpdateRPM=0;//æ˜¯å¦æ›´æ–°è½¬é€Ÿï¼Œå¦‚æœä¸º0ï¼Œåªæ›´æ–°é£æ‰‡æ¸©åº¦å’Œè´Ÿè½½
 	m_nLastUpdateTime = GetTime(0, -5);
 	m_bForcedCooling = FALSE;
 	m_bTakeOverStatus = FALSE;
@@ -304,7 +304,7 @@ BOOL CCore::Init()
 		return TRUE;
 	}
 
-	TRACE0("ÄÚºË¿ªÊ¼³õÊ¼»¯¡£\n");
+	TRACE0("å†…æ ¸å¼€å§‹åˆå§‹åŒ–ã€‚\n");
 	m_nInit = -1;
 	//
 	CString dllpth = GetExePath() + "\\ClevoEcInfo.dll";
@@ -312,7 +312,7 @@ BOOL CCore::Init()
 	m_hInstDLL = LoadLibrary(dllpth);
 	if (m_hInstDLL == NULL)
 	{
-		AfxMessageBox("ÎŞ·¨¼ÓÔØ" + dllpth + "£¬ÇëÈ·±£¸ÃÎÄ¼şÔÚ³ÌĞòÄ¿Â¼ÏÂ£¬²¢ÇÒÒÑ°²×°NTPortDrv¡£");
+		AfxMessageBox("æ— æ³•åŠ è½½" + dllpth + "ï¼Œè¯·ç¡®ä¿è¯¥æ–‡ä»¶åœ¨ç¨‹åºç›®å½•ä¸‹ï¼Œå¹¶ä¸”å·²å®‰è£…NTPortDrvã€‚");
 		return FALSE;
 	}
 
@@ -332,7 +332,7 @@ BOOL CCore::Init()
 	{
 		FreeLibrary(m_hInstDLL);
 		m_hInstDLL = NULL;
-		AfxMessageBox("´íÎóµÄClevoEcInfo.dll");
+		AfxMessageBox("é”™è¯¯çš„ClevoEcInfo.dll");
 		return FALSE;
 	}
 
@@ -340,7 +340,7 @@ BOOL CCore::Init()
 	{
 		FreeLibrary(m_hInstDLL);
 		m_hInstDLL = NULL;
-		AfxMessageBox("½Ó¿Ú³õÊ¼»¯·µ»ØÖµ´íÎó£¡");
+		AfxMessageBox("æ¥å£åˆå§‹åŒ–è¿”å›å€¼é”™è¯¯ï¼");
 		return FALSE;
 	}
 
@@ -357,7 +357,7 @@ BOOL CCore::Init()
 	m_pfnSetFANDutyAuto(2);
 	*/
 	//
-	TRACE0("ÄÚºË³õÊ¼»¯³É¹¦¡£\n");
+	TRACE0("å†…æ ¸åˆå§‹åŒ–æˆåŠŸã€‚\n");
 	m_nInit = 1;
 	return TRUE;
 }
@@ -383,34 +383,34 @@ void CCore::Run()
 
 	if (m_nInit == 1)
 	{
-		TRACE0("ÄÚºË¿ªÊ¼ÔËĞĞ¡£\n");
+		TRACE0("å†…æ ¸å¼€å§‹è¿è¡Œã€‚\n");
 		int curtime;
 		while (!m_nExit)
 		{
 			curtime = GetTime();
 			if (curtime >= nNextChecktTime || m_bForcedRefresh)
 			{
-				//MessageBox(NULL , "¹¤×÷ÖĞ...", "MyFunColtrol" , 0);
+				//MessageBox(NULL , "å·¥ä½œä¸­...", "MyFunColtrol" , 0);
 				Work();
-				m_nLastUpdateTime = curtime;//¸üĞÂÊ±¼ä
-				nNextChecktTime = GetTime(NULL, m_config.UpdateInterval);//ÏÂÒ»¸ö¸üĞÂÊ±¼ä
+				m_nLastUpdateTime = curtime;//æ›´æ–°æ—¶é—´
+				nNextChecktTime = GetTime(NULL, m_config.UpdateInterval);//ä¸‹ä¸€ä¸ªæ›´æ–°æ—¶é—´
 				m_bForcedRefresh = FALSE;
 				if (!bSetPriority)
 				{
 					bSetPriority = TRUE;
-					SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);//ÔÚÊ×´Î¸üĞÂ³É¹¦ºó²ÅÉèÖÃ¸ßÓÅÏÈ¼¶
+					SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);//åœ¨é¦–æ¬¡æ›´æ–°æˆåŠŸåæ‰è®¾ç½®é«˜ä¼˜å…ˆçº§
 				}
 			}
 			Sleep(100);
 		}
-		TRACE0("ÄÚºË½áÊøÔËĞĞ¡£\n");
+		TRACE0("å†…æ ¸ç»“æŸè¿è¡Œã€‚\n");
 	}
 	m_nExit = 2;
 }
 void CCore::Work()
 {
 	Update();
-	if (m_bForcedCooling)//Ç¿ÖÆÀäÈ´
+	if (m_bForcedCooling)//å¼ºåˆ¶å†·å´
 	{
 		if (m_nCurTemp[0] >= m_config.ForceTemp || m_nCurTemp[1] >= m_config.ForceTemp)
 		{
@@ -434,7 +434,7 @@ void CCore::Work()
 	else
 		ResetFan();
 
-	//Ëø¶¨GPUÆµÂÊ
+	//é”å®šGPUé¢‘ç‡
 	if (m_config.LockGPUFrequency)
 		m_GpuInfo.LockFrequency(m_config.GPUFrequency);
 	else
@@ -449,20 +449,20 @@ void CCore::Update()
 		data = m_pfnGetTempFanDuty(i+1);
 		if (abs(data.Remote - this->m_nCurTemp[i]) > 30)
 		{
-			//AfxMessageBox("»ñÈ¡ÎÂ¶ÈÓĞÎó");
-			//ÎÂ¶È»ñÈ¡¿ÉÄÜÓĞÎó£¬ÖØÊÔÒ»´Î
+			//AfxMessageBox("è·å–æ¸©åº¦æœ‰è¯¯");
+			//æ¸©åº¦è·å–å¯èƒ½æœ‰è¯¯ï¼Œé‡è¯•ä¸€æ¬¡
 			if (TempErr++ == 0)
 			{
 				Sleep(1000);
 				i--;
-				continue;//ÖØÊÔÒ»´Î
+				continue;//é‡è¯•ä¸€æ¬¡
 			}
 		}
 		this->m_nLastTemp[i] = this->m_nCurTemp[i];
 		this->m_nCurTemp[i] = data.Remote;
 		this->m_nCurDuty[i] = int(data.FanDuty * 100 / 255.0 + 0.5);
 
-		if (m_bUpdateRPM)//»ñÈ¡·çÉÈ×ªËÙ
+		if (m_bUpdateRPM)//è·å–é£æ‰‡è½¬é€Ÿ
 		{
 			int val = m_pfnGetFANRPM[i]();
 			if (val == 0)
@@ -485,22 +485,22 @@ void CCore::Control()
 		CalcLinearDuty();
 	else
 		CalcStdDuty();
-	//Éè¶¨×ªËÙ
+	//è®¾å®šè½¬é€Ÿ
 	SetFanDuty();
 
 }
 void CCore::CalcLinearDuty()
 {
-	static int nLastTemp[2] = { 0, 0 };//Ã¿´ÎÓÃÓÚ¼ÆËã×ªËÙµÄÎÂ¶È
+	static int nLastTemp[2] = { 0, 0 };//æ¯æ¬¡ç”¨äºè®¡ç®—è½¬é€Ÿçš„æ¸©åº¦
 
 	int duty,dl;
 	int j;
 	for (int i = 0; i < 2; i++)
 	{
-		nLastTemp[i] = max(nLastTemp[i], m_nCurTemp[i]);//ÎÂ¶ÈÉÏÉıÊ±Á¢¿ÌÒÔµ±Ç°ÎÂ¶È¼ÆËã×ªËÙ
-		nLastTemp[i] = min(nLastTemp[i], m_nCurTemp[i] + m_config.TransitionTemp);//ÎÂ¶ÈÏÂ½µÊ±ÒÔµ±Ç°ÎÂ¶È+¹ı¶ÉÎÂ¶ÈÀ´¼ÆËã×ªËÙ
+		nLastTemp[i] = max(nLastTemp[i], m_nCurTemp[i]);//æ¸©åº¦ä¸Šå‡æ—¶ç«‹åˆ»ä»¥å½“å‰æ¸©åº¦è®¡ç®—è½¬é€Ÿ
+		nLastTemp[i] = min(nLastTemp[i], m_nCurTemp[i] + m_config.TransitionTemp);//æ¸©åº¦ä¸‹é™æ—¶ä»¥å½“å‰æ¸©åº¦+è¿‡æ¸¡æ¸©åº¦æ¥è®¡ç®—è½¬é€Ÿ
 
-		j = nLastTemp[i];//¼ÆËã×ªËÙÊ¹ÓÃµÄÎÂ¶È
+		j = nLastTemp[i];//è®¡ç®—è½¬é€Ÿä½¿ç”¨çš„æ¸©åº¦
 
 		if (j < 45)
 		{
@@ -553,7 +553,7 @@ void CCore::CalcStdDuty()
 	for (int i = 0; i < 2; i++)
 	{
 		j = m_nCurTemp[i];
-		last_dl = m_nSetDutyLevel[i];//ÉÏÒ»´ÎµÄ¸ºÔØµÈ¼¶
+		last_dl = m_nSetDutyLevel[i];//ä¸Šä¸€æ¬¡çš„è´Ÿè½½ç­‰çº§
 		for (k = 0; k < 10; k++)
 		{
 			dl = 10 - k;
@@ -567,7 +567,7 @@ void CCore::CalcStdDuty()
 			}
 			else
 			{
-				//¸ù¾İÉÏÒ»´ÎµÄ¸ºÔØµ²Î»¾ö¶¨
+				//æ ¹æ®ä¸Šä¸€æ¬¡çš„è´Ÿè½½æŒ¡ä½å†³å®š
 				if (last_dl >= dl)
 				{
 					break;
@@ -604,7 +604,7 @@ void CCore::SetFanDuty()
 		duty = int(m_nSetDuty[i] * 255.0 / 100 + 0.5);
 		m_pfnSetFanDuty(i + 1, duty);
 		if (i == 1)
-			m_pfnSetFanDuty(i + 2, duty);//Èç¹û´æÔÚµÚ3¸ö·çÉÈ
+			m_pfnSetFanDuty(i + 2, duty);//å¦‚æœå­˜åœ¨ç¬¬3ä¸ªé£æ‰‡
 	}
 	m_bTakeOverStatus = TRUE;
 }
